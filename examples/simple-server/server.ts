@@ -61,13 +61,16 @@ const getServer = async () => {
   };
 
   {
-    const rawResource = registerResource({
-      name: "ui-raw-template",
-      uri: "ui://raw",
-      title: "Raw UI Template",
-      description: "A simple raw HTML UI",
-      mimeType: "text/html+mcp",
-    }, rawHtml);
+    const rawResource = registerResource(
+      {
+        name: "ui-raw-template",
+        uri: "ui://raw",
+        title: "Raw UI Template",
+        description: "A simple raw HTML UI",
+        mimeType: "text/html+mcp",
+      },
+      rawHtml,
+    );
 
     server.registerTool(
       "create-ui-raw",
@@ -89,13 +92,16 @@ const getServer = async () => {
   }
 
   {
-    const vanillaResource = registerResource({
-      name: "ui-vanilla-template",
-      uri: "ui://vanilla",
-      title: "Vanilla UI Template",
-      description: "A simple vanilla JS UI",
-      mimeType: "text/html+mcp",
-    }, vanillaHtml);
+    const vanillaResource = registerResource(
+      {
+        name: "ui-vanilla-template",
+        uri: "ui://vanilla",
+        title: "Vanilla UI Template",
+        description: "A simple vanilla JS UI",
+        mimeType: "text/html+mcp",
+      },
+      vanillaHtml,
+    );
 
     server.registerTool(
       "create-ui-vanilla",
@@ -117,13 +123,16 @@ const getServer = async () => {
   }
 
   {
-    const reactResource = registerResource({
-      name: "ui-react-template",
-      uri: "ui://react",
-      title: "React UI Template",
-      description: "A React-based UI",
-      mimeType: "text/html+mcp",
-    }, reactHtml);
+    const reactResource = registerResource(
+      {
+        name: "ui-react-template",
+        uri: "ui://react",
+        title: "React UI Template",
+        description: "A React-based UI",
+        mimeType: "text/html+mcp",
+      },
+      reactHtml,
+    );
 
     server.registerTool(
       "create-ui-react",
