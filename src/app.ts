@@ -6,9 +6,12 @@ import {
 
 import {
   CallToolRequest,
+  CallToolRequestSchema,
   CallToolResult,
   CallToolResultSchema,
   Implementation,
+  ListToolsRequest,
+  ListToolsRequestSchema,
   LoggingMessageNotification,
   Notification,
   PingRequestSchema,
@@ -47,6 +50,10 @@ type AppOptions = ProtocolOptions & {
   autoResize?: boolean;
 };
 
+type RequestHandlerExtra = Parameters<
+  Parameters<App["setRequestHandler"]>[1]
+>[1];
+
 export class App extends Protocol<Request, Notification, Result> {
   private _hostCapabilities?: McpUiHostCapabilities;
   private _hostInfo?: Implementation;
@@ -62,6 +69,14 @@ export class App extends Protocol<Request, Notification, Result> {
       console.log("Received ping:", request.params);
       return {};
     });
+  }
+
+  getHostCapabilities(): McpUiHostCapabilities | undefined {
+    return this._hostCapabilities;
+  }
+
+  getHostVersion(): Implementation | undefined {
+    return this._hostInfo;
   }
 
   set ontoolinput(
@@ -91,6 +106,26 @@ export class App extends Protocol<Request, Notification, Result> {
     this.setNotificationHandler(
       McpUiHostContextChangedNotificationSchema,
       (n) => callback(n.params),
+    );
+  }
+  set oncalltool(
+    callback: (
+      params: CallToolRequest["params"],
+      extra: RequestHandlerExtra,
+    ) => Promise<CallToolResult>,
+  ) {
+    this.setRequestHandler(CallToolRequestSchema, (request, extra) =>
+      callback(request.params, extra),
+    );
+  }
+  set onlisttools(
+    callback: (
+      params: ListToolsRequest["params"],
+      extra: RequestHandlerExtra,
+    ) => Promise<{ tools: string[] }>,
+  ) {
+    this.setRequestHandler(ListToolsRequestSchema, (request, extra) =>
+      callback(request.params, extra),
     );
   }
 
