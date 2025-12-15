@@ -4,7 +4,7 @@
 import {
   App,
   PostMessageTransport,
-  applyHostStyles,
+  applyHostStyleVariables,
   applyDocumentTheme,
 } from "@modelcontextprotocol/ext-apps";
 import { Chart, registerables } from "chart.js";
@@ -454,7 +454,7 @@ app.onhostcontextchanged = (params) => {
     applyDocumentTheme(params.theme);
   }
   if (params.styles?.variables) {
-    applyHostStyles(params.styles.variables);
+    applyHostStyleVariables(params.styles.variables);
   }
   // Recreate chart to pick up new colors
   if (state.chart && (params.theme || params.styles?.variables)) {
@@ -470,7 +470,7 @@ app.connect(new PostMessageTransport(window.parent)).then(() => {
     applyDocumentTheme(ctx.theme);
   }
   if (ctx?.styles?.variables) {
-    applyHostStyles(ctx.styles.variables);
+    applyHostStyleVariables(ctx.styles.variables);
   }
 });
 

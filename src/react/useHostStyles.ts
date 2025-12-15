@@ -1,10 +1,10 @@
 import { useEffect, useRef } from "react";
 import { App } from "../app";
-import { applyDocumentTheme, applyHostStyles } from "../styles";
+import { applyDocumentTheme, applyHostStyleVariables } from "../styles";
 import { McpUiHostContext } from "../types";
 
 /**
- * React hook that applies host styles and theme as CSS custom properties.
+ * React hook that applies host style variables and theme as CSS custom properties.
  *
  * This hook listens to host context changes and automatically applies:
  * - `styles.variables` CSS variables to `document.documentElement` (e.g., `--color-background-primary`)
@@ -24,7 +24,7 @@ import { McpUiHostContext } from "../types";
  * @example Basic usage with useApp
  * ```tsx
  * import { useApp } from '@modelcontextprotocol/ext-apps/react';
- * import { useHostStyles } from '@modelcontextprotocol/ext-apps/react';
+ * import { useHostStyleVariables } from '@modelcontextprotocol/ext-apps/react';
  *
  * function MyApp() {
  *   const { app, isConnected } = useApp({
@@ -32,8 +32,8 @@ import { McpUiHostContext } from "../types";
  *     capabilities: {},
  *   });
  *
- *   // Automatically apply host styles and theme
- *   useHostStyles(app);
+ *   // Automatically apply host style variables and theme
+ *   useHostStyleVariables(app);
  *
  *   return (
  *     <div style={{ background: 'var(--color-background-primary)' }}>
@@ -49,14 +49,14 @@ import { McpUiHostContext } from "../types";
  *
  * // ... get initial context from app.connect() result
  *
- * useHostStyles(app, hostContext);
+ * useHostStyleVariables(app, hostContext);
  * ```
  *
- * @see {@link applyHostStyles} for the underlying styles function
+ * @see {@link applyHostStyleVariables} for the underlying styles function
  * @see {@link applyDocumentTheme} for the underlying theme function
  * @see {@link McpUiStyles} for available CSS variables
  */
-export function useHostStyles(
+export function useHostStyleVariables(
   app: App | null,
   initialContext?: McpUiHostContext | null,
 ): void {
@@ -71,7 +71,7 @@ export function useHostStyles(
       applyDocumentTheme(initialContext.theme);
     }
     if (initialContext?.styles?.variables) {
-      applyHostStyles(initialContext.styles.variables);
+      applyHostStyleVariables(initialContext.styles.variables);
     }
     if (initialContext?.theme || initialContext?.styles?.variables) {
       initialApplied.current = true;
@@ -89,7 +89,7 @@ export function useHostStyles(
         applyDocumentTheme(params.theme);
       }
       if (params.styles?.variables) {
-        applyHostStyles(params.styles.variables);
+        applyHostStyleVariables(params.styles.variables);
       }
     };
   }, [app]);

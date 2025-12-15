@@ -74,7 +74,7 @@ export function applyDocumentTheme(theme: McpUiTheme): void {
 }
 
 /**
- * Apply host styles as CSS custom properties on an element.
+ * Apply host style variables as CSS custom properties on an element.
  *
  * This function takes the `variables` object from `McpUiHostContext.styles` and sets
  * each CSS variable on the specified root element (defaults to `document.documentElement`).
@@ -84,13 +84,13 @@ export function applyDocumentTheme(theme: McpUiTheme): void {
  * @param styles - The styles object from `McpUiHostContext.styles.variables`
  * @param root - The element to apply styles to (defaults to `document.documentElement`)
  *
- * @example Apply styles from host context
+ * @example Apply style variables from host context
  * ```typescript
- * import { applyHostStyles } from '@modelcontextprotocol/ext-apps';
+ * import { applyHostStyleVariables } from '@modelcontextprotocol/ext-apps';
  *
  * app.onhostcontextchanged = (params) => {
  *   if (params.styles?.variables) {
- *     applyHostStyles(params.styles.variables);
+ *     applyHostStyleVariables(params.styles.variables);
  *   }
  * };
  * ```
@@ -98,13 +98,13 @@ export function applyDocumentTheme(theme: McpUiTheme): void {
  * @example Apply to a specific element
  * ```typescript
  * const container = document.getElementById('app-root');
- * applyHostStyles(hostContext.styles?.variables, container);
+ * applyHostStyleVariables(hostContext.styles?.variables, container);
  * ```
  *
  * @see {@link McpUiStyles} for the available CSS variables
  * @see {@link McpUiHostContext} for the full host context structure
  */
-export function applyHostStyles(
+export function applyHostStyleVariables(
   styles: McpUiStyles,
   root: HTMLElement = document.documentElement,
 ): void {
