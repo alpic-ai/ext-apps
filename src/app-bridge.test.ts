@@ -373,7 +373,7 @@ describe("App <-> AppBridge integration", () => {
       await newBridgeTransport.close();
     });
 
-    it("sendResourceTeardown triggers app.onteardown", async () => {
+    it("teardownResource triggers app.onteardown", async () => {
       let teardownCalled = false;
       app.onteardown = async () => {
         teardownCalled = true;
@@ -381,12 +381,12 @@ describe("App <-> AppBridge integration", () => {
       };
 
       await app.connect(appTransport);
-      await bridge.sendResourceTeardown({});
+      await bridge.teardownResource({});
 
       expect(teardownCalled).toBe(true);
     });
 
-    it("sendResourceTeardown waits for async cleanup", async () => {
+    it("teardownResource waits for async cleanup", async () => {
       const cleanupSteps: string[] = [];
       app.onteardown = async () => {
         cleanupSteps.push("start");
@@ -396,7 +396,7 @@ describe("App <-> AppBridge integration", () => {
       };
 
       await app.connect(appTransport);
-      await bridge.sendResourceTeardown({});
+      await bridge.teardownResource({});
 
       expect(cleanupSteps).toEqual(["start", "done"]);
     });
@@ -481,7 +481,7 @@ describe("App <-> AppBridge integration", () => {
       expect(result.isError).toBe(true);
     });
 
-    it("app.sendOpenLink triggers bridge.onopenlink and returns result", async () => {
+    it("app.openLink triggers bridge.onopenlink and returns result", async () => {
       const receivedLinks: string[] = [];
       bridge.onopenlink = async (params) => {
         receivedLinks.push(params.url);
@@ -489,21 +489,48 @@ describe("App <-> AppBridge integration", () => {
       };
 
       await app.connect(appTransport);
-      const result = await app.sendOpenLink({ url: "https://example.com" });
+      const result = await app.openLink({ url: "https://example.com" });
 
       expect(receivedLinks).toEqual(["https://example.com"]);
       expect(result).toEqual({});
     });
 
-    it("app.sendOpenLink returns error when host denies", async () => {
+    it("app.openLink returns error when host denies", async () => {
       bridge.onopenlink = async () => {
         return { isError: true };
       };
 
       await app.connect(appTransport);
-      const result = await app.sendOpenLink({ url: "https://blocked.com" });
+      const result = await app.openLink({ url: "https://blocked.com" });
 
       expect(result.isError).toBe(true);
+    });
+  });
+
+  describe("deprecated method aliases", () => {
+    beforeEach(async () => {
+      await bridge.connect(bridgeTransport);
+      await app.connect(appTransport);
+    });
+
+    it("app.sendOpenLink is an alias for app.openLink", async () => {
+      expect(app.sendOpenLink).toBe(app.openLink);
+    });
+
+    it("bridge.sendResourceTeardown is a deprecated alias for bridge.teardownResource", () => {
+      expect(bridge.sendResourceTeardown).toBe(bridge.teardownResource);
+    });
+
+    it("app.sendOpenLink works as deprecated alias", async () => {
+      const receivedLinks: string[] = [];
+      bridge.onopenlink = async (params) => {
+        receivedLinks.push(params.url);
+        return {};
+      };
+
+      await app.sendOpenLink({ url: "https://example.com" });
+
+      expect(receivedLinks).toEqual(["https://example.com"]);
     });
   });
 
