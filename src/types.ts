@@ -49,6 +49,7 @@ export {
   type McpUiHostContextChangedNotification,
   type McpUiResourceTeardownRequest,
   type McpUiResourceTeardownResult,
+  type McpUiRequestCloseNotification,
   type McpUiHostCapabilities,
   type McpUiAppCapabilities,
   type McpUiInitializeRequest,
@@ -81,6 +82,7 @@ import type {
   McpUiInitializedNotification,
   McpUiSizeChangedNotification,
   McpUiSandboxProxyReadyNotification,
+  McpUiRequestCloseNotification,
   McpUiInitializeResult,
   McpUiOpenLinkResult,
   McpUiMessageResult,
@@ -111,6 +113,7 @@ export {
   McpUiHostContextChangedNotificationSchema,
   McpUiResourceTeardownRequestSchema,
   McpUiResourceTeardownResultSchema,
+  McpUiRequestCloseNotificationSchema,
   McpUiHostCapabilitiesSchema,
   McpUiAppCapabilitiesSchema,
   McpUiInitializeRequestSchema,
@@ -181,7 +184,7 @@ export type AppRequest =
  * - Sandbox resource ready
  *
  * App to host:
- * - Initialized, size-changed, sandbox-proxy-ready
+ * - Initialized, size-changed, sandbox-proxy-ready, request-close
  * - Logging messages
  */
 export type AppNotification =
@@ -199,6 +202,7 @@ export type AppNotification =
   | McpUiInitializedNotification
   | McpUiSizeChangedNotification
   | McpUiSandboxProxyReadyNotification
+  | McpUiRequestCloseNotification
   | LoggingMessageNotification;
 
 /**

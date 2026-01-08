@@ -462,6 +462,19 @@ export const McpUiSupportedContentBlockModalitiesSchema = z.object({
 });
 
 /**
+ * @description Notification for app-initiated close request (View -> Host).
+ * Views send this to request that the host close them. The host decides
+ * whether to proceed with the close - if approved, the host will send
+ * `ui/resource-teardown` to allow the view to perform cleanup before being
+ * unmounted.
+ * @see {@link app.App.requestClose} for the app method that sends this
+ */
+export const McpUiRequestCloseNotificationSchema = z.object({
+  method: z.literal("ui/notifications/request-close"),
+  params: z.object({}).optional(),
+});
+
+/**
  * @description Capabilities supported by the host application.
  * @see {@link McpUiInitializeResult `McpUiInitializeResult`} for the initialization result that includes these capabilities
  */

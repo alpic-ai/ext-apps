@@ -1234,6 +1234,31 @@ Host SHOULD wait for a response before tearing down the resource (to prevent dat
 
 The View SHOULD send this notification when rendered content body size changes (e.g. using ResizeObserver API to report up to date size).
 
+#### Notifications (View → Host)
+
+`ui/notifications/request-close` - View requests host to close it
+
+```typescript
+{
+  jsonrpc: "2.0",
+  method: "ui/notifications/request-close",
+  params: {}
+}
+```
+
+The View MAY send this notification to request that the host close it. This enables View-initiated close flows (e.g., user clicks a "Done" button in the View).
+
+**Host behavior:**
+- Host decides whether to proceed with the close
+- If approved, Host MUST send `ui/resource-teardown` to allow the View to perform cleanup
+- Host MUST wait for the View's teardown response before unmounting the iframe
+- Host MAY deny or defer the close request (e.g., if there are unsaved changes elsewhere)
+
+**View behavior:**
+- View SHOULD NOT perform cleanup before sending this notification
+- View SHOULD handle cleanup in its `ui/resource-teardown` handler
+- This ensures the View has a single cleanup procedure regardless of whether the close was initiated by the View or the Host
+
 `ui/notifications/host-context-changed` - Host context has changed
 
 ```typescript
@@ -1388,17 +1413,22 @@ sequenceDiagram
 
 #### 4. Cleanup
 
+Cleanup can be initiated by either the Host or the View. In both cases, the Host sends `ui/resource-teardown` to allow the View to perform cleanup before unmounting.
+
 ```mermaid
 sequenceDiagram
   participant H as Host
   participant UI as View (iframe)
+  opt View-initiated close
+    UI ->> H: ui/notifications/request-close
+  end
   H ->> UI: ui/resource-teardown
   UI --> UI: Graceful termination
   UI -->> H: ui/resource-teardown response
   H -x H: Tear down iframe and listeners
 ```
 
-Note: Cleanup may be triggered at any point in the lifecycle following View initialization.
+Note: Cleanup may be triggered at any point in the lifecycle following View initialization. If the View sends `ui/notifications/request-close`, the Host MAY deny or defer the request.
 
 #### Key Differences from Pre-SEP MCP-UI:
 

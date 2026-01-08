@@ -36,6 +36,7 @@ import {
   McpUiResourceTeardownRequest,
   McpUiResourceTeardownRequestSchema,
   McpUiResourceTeardownResult,
+  McpUiRequestCloseNotification,
   McpUiSizeChangedNotification,
   McpUiToolCancelledNotification,
   McpUiToolCancelledNotificationSchema,
@@ -929,6 +930,50 @@ export class App extends Protocol<AppRequest, AppNotification, AppResult> {
 
   /** @deprecated Use {@link openLink `openLink`} instead */
   sendOpenLink: App["openLink"] = this.openLink;
+
+  /**
+   * Request the host to close this app.
+   *
+   * Apps call this method to request that the host close them. The host decides
+   * whether to proceed with the close - if approved, the host will send
+   * `ui/resource-teardown` to allow the app to perform cleanup before being
+   * unmounted. This piggybacks on the existing teardown mechanism, ensuring
+   * the app only needs a single shutdown procedure (via {@link onteardown `onteardown`})
+   * regardless of whether the close was initiated by the app or the host.
+   *
+   * This is a fire-and-forget notification - no response is expected.
+   * If the host approves the close, the app will receive a `ui/resource-teardown`
+   * request via the {@link onteardown `onteardown`} handler to perform cleanup.
+   *
+   * @param params - Empty params object (reserved for future use)
+   * @returns Promise that resolves when the notification is sent
+   *
+   * @example App-initiated close after user action
+   * ```typescript
+   * // User clicks "Done" button in the app
+   * async function handleDoneClick() {
+   *   // Request the host to close the app
+   *   await app.requestClose();
+   *   // If host approves, onteardown handler will be called for cleanup
+   * }
+   *
+   * // Set up teardown handler (called for both app-initiated and host-initiated close)
+   * app.onteardown = async () => {
+   *   await saveState();
+   *   closeConnections();
+   *   return {};
+   * };
+   * ```
+   *
+   * @see {@link McpUiRequestCloseNotification `McpUiRequestCloseNotification`} for notification structure
+   * @see {@link onteardown `onteardown`} for the cleanup handler
+   */
+  requestClose(params: McpUiRequestCloseNotification["params"] = {}) {
+    return this.notification(<McpUiRequestCloseNotification>{
+      method: "ui/notifications/request-close",
+      params,
+    });
+  }
 
   /**
    * Request a change to the display mode.

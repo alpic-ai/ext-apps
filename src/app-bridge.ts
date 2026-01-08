@@ -71,6 +71,8 @@ import {
   McpUiOpenLinkResult,
   McpUiResourceTeardownRequest,
   McpUiResourceTeardownResultSchema,
+  McpUiRequestCloseNotification,
+  McpUiRequestCloseNotificationSchema,
   McpUiSandboxProxyReadyNotification,
   McpUiSandboxProxyReadyNotificationSchema,
   McpUiSizeChangedNotificationSchema,
@@ -611,6 +613,41 @@ export class AppBridge extends Protocol<
       async (request, extra) => {
         return callback(request.params, extra);
       },
+    );
+  }
+
+  /**
+   * Register a handler for app-initiated close request notifications from the view.
+   *
+   * The view sends `ui/request-close` when it wants the host to close it.
+   * If the host decides to proceed with the close, it should send
+   * `ui/resource-teardown` (via {@link teardownResource `teardownResource`}) to allow
+   * the view to perform cleanup, then unmount the iframe after the view responds.
+   *
+   * @param callback - Handler that receives close request params
+   *   - params - Empty object (reserved for future use)
+   *
+   * @example
+   * ```typescript
+   * bridge.onrequestclose = async (params) => {
+   *   console.log("App requested close");
+   *   // Initiate teardown to allow the app to clean up
+   *   // Alternatively, the callback can early return to prevent teardown
+   *   await bridge.teardownResource({});
+   *   // Now safe to unmount the iframe
+   *   iframe.remove();
+   * };
+   * ```
+   *
+   * @see {@link McpUiRequestCloseNotification `McpUiRequestCloseNotification`} for the notification type
+   * @see {@link teardownResource `teardownResource`} for initiating teardown
+   */
+  set onrequestclose(
+    callback: (params: McpUiRequestCloseNotification["params"]) => void,
+  ) {
+    this.setNotificationHandler(
+      McpUiRequestCloseNotificationSchema,
+      (request) => callback(request.params),
     );
   }
 
