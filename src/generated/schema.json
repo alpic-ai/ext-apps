@@ -3808,6 +3808,23 @@
       },
       "additionalProperties": {}
     },
+    "McpUiRequestCloseNotification": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "type": "object",
+      "properties": {
+        "method": {
+          "type": "string",
+          "const": "ui/notifications/request-close"
+        },
+        "params": {
+          "type": "object",
+          "properties": {},
+          "additionalProperties": false
+        }
+      },
+      "required": ["method"],
+      "additionalProperties": false
+    },
     "McpUiRequestDisplayModeRequest": {
       "$schema": "https://json-schema.org/draft/2020-12/schema",
       "type": "object",
