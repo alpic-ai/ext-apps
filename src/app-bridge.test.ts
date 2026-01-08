@@ -520,6 +520,35 @@ describe("App <-> AppBridge integration", () => {
         }),
       ).rejects.toThrow("Context update failed");
     });
+
+    it("app.requestClose allows host to initiate teardown flow", async () => {
+      const events: string[] = [];
+
+      // Host handles close request by initiating teardown
+      bridge.onrequestclose = async () => {
+        events.push("close-requested");
+        // Host decides to proceed with close - initiate teardown
+        await bridge.teardownResource({});
+        events.push("teardown-complete");
+      };
+
+      // App handles teardown (cleanup before unmount)
+      app.onteardown = async () => {
+        events.push("app-cleanup");
+        return {};
+      };
+
+      await app.connect(appTransport);
+      await app.requestClose();
+      await flush();
+
+      // Verify the full flow: request → teardown → cleanup
+      expect(events).toEqual([
+        "close-requested",
+        "app-cleanup",
+        "teardown-complete",
+      ]);
+    });
   });
 
   describe("App -> Host requests", () => {
