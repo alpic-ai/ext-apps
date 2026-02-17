@@ -22,6 +22,8 @@
 
 <p align="center">
   <a href="https://www.npmjs.com/package/@modelcontextprotocol/ext-apps"><img src="https://img.shields.io/npm/v/@modelcontextprotocol/ext-apps.svg" alt="npm version"></a>
+  <a href="https://www.npmjs.com/package/@modelcontextprotocol/ext-apps"><img src="https://img.shields.io/npm/dm/@modelcontextprotocol/ext-apps.svg" alt="npm downloads"></a>
+  <a href="https://github.com/modelcontextprotocol/ext-apps"><img src="https://img.shields.io/github/stars/modelcontextprotocol/ext-apps" alt="GitHub stars"></a>
   <a href="https://modelcontextprotocol.github.io/ext-apps/api/"><img src="https://img.shields.io/badge/docs-API%20Reference-blue" alt="API Documentation"></a>
 </p>
 
