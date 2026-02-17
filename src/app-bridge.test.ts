@@ -615,6 +615,40 @@ describe("App <-> AppBridge integration", () => {
     });
   });
 
+  describe("double-connect guard", () => {
+    it("AppBridge.connect() throws if already connected", async () => {
+      await bridge.connect(bridgeTransport);
+      await app.connect(appTransport);
+
+      // Attempting to connect again with a different transport should throw
+      const [, secondBridgeTransport] = InMemoryTransport.createLinkedPair();
+      await expect(bridge.connect(secondBridgeTransport)).rejects.toThrow(
+        "AppBridge is already connected",
+      );
+    });
+
+    it("App.connect() throws if already connected", async () => {
+      await bridge.connect(bridgeTransport);
+      await app.connect(appTransport);
+
+      // Attempting to connect again should throw
+      const [secondAppTransport] = InMemoryTransport.createLinkedPair();
+      await expect(app.connect(secondAppTransport)).rejects.toThrow(
+        "App is already connected",
+      );
+    });
+
+    it("AppBridge.connect() throws even when called with the same transport", async () => {
+      await bridge.connect(bridgeTransport);
+      await app.connect(appTransport);
+
+      // Should throw regardless of whether it's the same or a different transport
+      await expect(bridge.connect(bridgeTransport)).rejects.toThrow(
+        "AppBridge is already connected",
+      );
+    });
+  });
+
   describe("ping", () => {
     it("App responds to ping from bridge", async () => {
       await bridge.connect(bridgeTransport);
