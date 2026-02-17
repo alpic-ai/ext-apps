@@ -32,6 +32,18 @@
   <br><em>Color picker built with MCP Apps, running in Claude</em>
 </p>
 
+## Table of Contents
+
+- [Specification](#specification)
+- [Why MCP Apps?](#why-mcp-apps)
+- [How It Works](#how-it-works)
+- [Getting Started](#getting-started)
+- [Using the SDK](#using-the-sdk)
+- [Agent Skills](#agent-skills)
+- [Examples](#examples)
+- [Resources](#resources)
+- [Contributing](#contributing)
+
 ## Specification
 
 <div align="center">
