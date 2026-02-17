@@ -1,11 +1,9 @@
 <!-- LOGO -->
-<h1>
-<p align="center">
+<div align="center">
   <img src="media/mcp.svg#gh-light-mode-only" alt="MCP Apps" width="128">
   <img src="media/mcp-white.svg#gh-dark-mode-only" alt="MCP Apps" width="128">
-  <br>MCP Apps
-</h1>
-  <p align="center">
+  <h1>MCP Apps</h1>
+  <p>
     Build interactive UIs for MCP tools — charts, forms, dashboards — that render inline in any compliant chat client.
     <br /><br />
     <a href="#why-mcp-apps">Why</a>
@@ -18,9 +16,11 @@
     ·
     <a href="CONTRIBUTING.md">Contributing</a>
   </p>
-</p>
+</div>
 
 <p align="center">
+  <a href="https://github.com/modelcontextprotocol/ext-apps/actions/workflows/ci.yml"><img src="https://github.com/modelcontextprotocol/ext-apps/actions/workflows/ci.yml/badge.svg" alt="CI"></a>
+  <a href="LICENSE"><img src="https://img.shields.io/github/license/modelcontextprotocol/ext-apps" alt="License"></a>
   <a href="https://www.npmjs.com/package/@modelcontextprotocol/ext-apps"><img src="https://img.shields.io/npm/v/@modelcontextprotocol/ext-apps.svg" alt="npm version"></a>
   <a href="https://www.npmjs.com/package/@modelcontextprotocol/ext-apps"><img src="https://img.shields.io/npm/dm/@modelcontextprotocol/ext-apps.svg" alt="npm downloads"></a>
   <a href="https://github.com/modelcontextprotocol/ext-apps"><img src="https://img.shields.io/github/stars/modelcontextprotocol/ext-apps" alt="GitHub stars"></a>
@@ -29,6 +29,7 @@
 
 <p align="center">
   <img src="media/claude-colorpicker-apps.gif" alt="MCP Apps demo" width="600">
+  <br><em>Color picker built with MCP Apps, running in Claude</em>
 </p>
 
 ## Specification
@@ -38,7 +39,7 @@
 | Version        | Status      | Link                                                                                                                              |
 | -------------- | ----------- | --------------------------------------------------------------------------------------------------------------------------------- |
 | **2026-01-26** | Stable      | [specification/2026-01-26/apps.mdx](https://github.com/modelcontextprotocol/ext-apps/blob/main/specification/2026-01-26/apps.mdx) |
-| draft          | Development | [specification/draft/apps.mdx](https://github.com/modelcontextprotocol/ext-apps/blob/main/specification/draft/apps.mdx)           |
+| **draft**      | Development | [specification/draft/apps.mdx](https://github.com/modelcontextprotocol/ext-apps/blob/main/specification/draft/apps.mdx)           |
 
 </div>
 
