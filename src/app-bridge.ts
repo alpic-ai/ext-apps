@@ -619,7 +619,7 @@ export class AppBridge extends Protocol<
   /**
    * Register a handler for app-initiated close request notifications from the view.
    *
-   * The view sends `ui/request-close` when it wants the host to close it.
+   * The view sends `ui/notifications/request-close` when it wants the host to close it.
    * If the host decides to proceed with the close, it should send
    * `ui/resource-teardown` (via {@link teardownResource `teardownResource`}) to allow
    * the view to perform cleanup, then unmount the iframe after the view responds.
