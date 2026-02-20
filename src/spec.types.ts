@@ -776,6 +776,8 @@ export const TOOL_CANCELLED_METHOD: McpUiToolCancelledNotification["method"] =
   "ui/notifications/tool-cancelled";
 export const HOST_CONTEXT_CHANGED_METHOD: McpUiHostContextChangedNotification["method"] =
   "ui/notifications/host-context-changed";
+export const REQUEST_CLOSE_METHOD: McpUiRequestCloseNotification["method"] =
+  "ui/notifications/request-close";
 export const RESOURCE_TEARDOWN_METHOD: McpUiResourceTeardownRequest["method"] =
   "ui/resource-teardown";
 export const INITIALIZE_METHOD: McpUiInitializeRequest["method"] =
