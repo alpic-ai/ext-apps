@@ -23,7 +23,7 @@ export {
   TOOL_RESULT_METHOD,
   TOOL_CANCELLED_METHOD,
   HOST_CONTEXT_CHANGED_METHOD,
-  REQUEST_CLOSE_METHOD,
+  REQUEST_TEARDOWN_METHOD,
   RESOURCE_TEARDOWN_METHOD,
   INITIALIZE_METHOD,
   INITIALIZED_METHOD,
@@ -53,7 +53,7 @@ export {
   type McpUiHostContextChangedNotification,
   type McpUiResourceTeardownRequest,
   type McpUiResourceTeardownResult,
-  type McpUiRequestCloseNotification,
+  type McpUiRequestTeardownNotification,
   type McpUiHostCapabilities,
   type McpUiAppCapabilities,
   type McpUiInitializeRequest,
@@ -87,7 +87,7 @@ import type {
   McpUiInitializedNotification,
   McpUiSizeChangedNotification,
   McpUiSandboxProxyReadyNotification,
-  McpUiRequestCloseNotification,
+  McpUiRequestTeardownNotification,
   McpUiInitializeResult,
   McpUiOpenLinkResult,
   McpUiDownloadFileResult,
@@ -121,7 +121,7 @@ export {
   McpUiHostContextChangedNotificationSchema,
   McpUiResourceTeardownRequestSchema,
   McpUiResourceTeardownResultSchema,
-  McpUiRequestCloseNotificationSchema,
+  McpUiRequestTeardownNotificationSchema,
   McpUiHostCapabilitiesSchema,
   McpUiAppCapabilitiesSchema,
   McpUiInitializeRequestSchema,
@@ -193,7 +193,7 @@ export type AppRequest =
  * - Sandbox resource ready
  *
  * App to host:
- * - Initialized, size-changed, sandbox-proxy-ready, request-close
+ * - Initialized, size-changed, sandbox-proxy-ready, request-teardown
  * - Logging messages
  */
 export type AppNotification =
@@ -211,7 +211,7 @@ export type AppNotification =
   | McpUiInitializedNotification
   | McpUiSizeChangedNotification
   | McpUiSandboxProxyReadyNotification
-  | McpUiRequestCloseNotification
+  | McpUiRequestTeardownNotification
   | LoggingMessageNotification;
 
 /**

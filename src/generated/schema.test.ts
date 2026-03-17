@@ -91,8 +91,8 @@ export type McpUiSupportedContentBlockModalitiesSchemaInferredType = z.infer<
   typeof generated.McpUiSupportedContentBlockModalitiesSchema
 >;
 
-export type McpUiRequestCloseNotificationSchemaInferredType = z.infer<
-  typeof generated.McpUiRequestCloseNotificationSchema
+export type McpUiRequestTeardownNotificationSchemaInferredType = z.infer<
+  typeof generated.McpUiRequestTeardownNotificationSchema
 >;
 
 export type McpUiHostCapabilitiesSchemaInferredType = z.infer<
@@ -259,11 +259,11 @@ expectType<spec.McpUiSupportedContentBlockModalities>(
 expectType<McpUiSupportedContentBlockModalitiesSchemaInferredType>(
   {} as spec.McpUiSupportedContentBlockModalities,
 );
-expectType<spec.McpUiRequestCloseNotification>(
-  {} as McpUiRequestCloseNotificationSchemaInferredType,
+expectType<spec.McpUiRequestTeardownNotification>(
+  {} as McpUiRequestTeardownNotificationSchemaInferredType,
 );
-expectType<McpUiRequestCloseNotificationSchemaInferredType>(
-  {} as spec.McpUiRequestCloseNotification,
+expectType<McpUiRequestTeardownNotificationSchemaInferredType>(
+  {} as spec.McpUiRequestTeardownNotification,
 );
 expectType<spec.McpUiHostCapabilities>(
   {} as McpUiHostCapabilitiesSchemaInferredType,

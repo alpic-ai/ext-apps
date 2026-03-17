@@ -74,8 +74,8 @@ import {
   McpUiDownloadFileResult,
   McpUiResourceTeardownRequest,
   McpUiResourceTeardownResultSchema,
-  McpUiRequestCloseNotification,
-  McpUiRequestCloseNotificationSchema,
+  McpUiRequestTeardownNotification,
+  McpUiRequestTeardownNotificationSchema,
   McpUiSandboxProxyReadyNotification,
   McpUiSandboxProxyReadyNotificationSchema,
   McpUiSizeChangedNotificationSchema,
@@ -676,21 +676,21 @@ export class AppBridge extends Protocol<
   }
 
   /**
-   * Register a handler for app-initiated close request notifications from the view.
+   * Register a handler for app-initiated teardown request notifications from the view.
    *
-   * The view sends `ui/notifications/request-close` when it wants the host to close it.
-   * If the host decides to proceed with the close, it should send
+   * The view sends `ui/notifications/request-teardown` when it wants the host to tear it down.
+   * If the host decides to proceed, it should send
    * `ui/resource-teardown` (via {@link teardownResource `teardownResource`}) to allow
-   * the view to perform cleanup, then unmount the iframe after the view responds.
+   * the view to perform gracefull termination, then unmount the iframe after the view responds.
    *
-   * @param callback - Handler that receives close request params
+   * @param callback - Handler that receives teardown request params
    *   - params - Empty object (reserved for future use)
    *
    * @example
    * ```typescript
-   * bridge.onrequestclose = async (params) => {
-   *   console.log("App requested close");
-   *   // Initiate teardown to allow the app to clean up
+   * bridge.onrequestteardown = async (params) => {
+   *   console.log("App requested teardown");
+   *   // Initiate teardown to allow the app to persist unsaved state
    *   // Alternatively, the callback can early return to prevent teardown
    *   await bridge.teardownResource({});
    *   // Now safe to unmount the iframe
@@ -698,14 +698,14 @@ export class AppBridge extends Protocol<
    * };
    * ```
    *
-   * @see {@link McpUiRequestCloseNotification `McpUiRequestCloseNotification`} for the notification type
+   * @see {@link McpUiRequestTeardownNotification `McpUiRequestTeardownNotification`} for the notification type
    * @see {@link teardownResource `teardownResource`} for initiating teardown
    */
-  set onrequestclose(
-    callback: (params: McpUiRequestCloseNotification["params"]) => void,
+  set onrequestteardown(
+    callback: (params: McpUiRequestTeardownNotification["params"]) => void,
   ) {
     this.setNotificationHandler(
-      McpUiRequestCloseNotificationSchema,
+      McpUiRequestTeardownNotificationSchema,
       (request) => callback(request.params),
     );
   }

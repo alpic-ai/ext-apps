@@ -44,7 +44,7 @@ import {
   McpUiResourceTeardownRequest,
   McpUiResourceTeardownRequestSchema,
   McpUiResourceTeardownResult,
-  McpUiRequestCloseNotification,
+  McpUiRequestTeardownNotification,
   McpUiSizeChangedNotification,
   McpUiToolCancelledNotification,
   McpUiToolCancelledNotificationSchema,
@@ -178,7 +178,7 @@ type RequestHandlerExtra = Parameters<
  * 1. **Create**: Instantiate App with info and capabilities
  * 2. **Connect**: Call `connect()` to establish transport and perform handshake
  * 3. **Interactive**: Send requests, receive notifications, call tools
- * 4. **Cleanup**: Host sends teardown request before unmounting
+ * 4. **Teardown**: Host sends teardown request before unmounting
  *
  * ## Inherited Methods
  *
@@ -1136,32 +1136,32 @@ export class App extends Protocol<AppRequest, AppNotification, AppResult> {
   }
 
   /**
-   * Request the host to close this app.
+   * Request the host to tear down this app.
    *
-   * Apps call this method to request that the host close them. The host decides
-   * whether to proceed with the close - if approved, the host will send
-   * `ui/resource-teardown` to allow the app to perform cleanup before being
+   * Apps call this method to request that the host tear them down. The host
+   * decides whether to proceed - if approved, the host will send
+   * `ui/resource-teardown` to allow the app to perform gracefull termination before being
    * unmounted. This piggybacks on the existing teardown mechanism, ensuring
    * the app only needs a single shutdown procedure (via {@link onteardown `onteardown`})
-   * regardless of whether the close was initiated by the app or the host.
+   * regardless of whether the teardown was initiated by the app or the host.
    *
    * This is a fire-and-forget notification - no response is expected.
-   * If the host approves the close, the app will receive a `ui/resource-teardown`
-   * request via the {@link onteardown `onteardown`} handler to perform cleanup.
+   * If the host approves, the app will receive a `ui/resource-teardown`
+   * request via the {@link onteardown `onteardown`} handler to persist unsaved state.
    *
    * @param params - Empty params object (reserved for future use)
    * @returns Promise that resolves when the notification is sent
    *
-   * @example App-initiated close after user action
+   * @example App-initiated teardown after user action
    * ```typescript
    * // User clicks "Done" button in the app
    * async function handleDoneClick() {
-   *   // Request the host to close the app
-   *   await app.requestClose();
-   *   // If host approves, onteardown handler will be called for cleanup
+   *   // Request the host to tear down the app
+   *   await app.requestTeardown();
+   *   // If host approves, onteardown handler will be called for termination
    * }
    *
-   * // Set up teardown handler (called for both app-initiated and host-initiated close)
+   * // Set up teardown handler (called for both app-initiated and host-initiated teardown)
    * app.onteardown = async () => {
    *   await saveState();
    *   closeConnections();
@@ -1169,12 +1169,12 @@ export class App extends Protocol<AppRequest, AppNotification, AppResult> {
    * };
    * ```
    *
-   * @see {@link McpUiRequestCloseNotification `McpUiRequestCloseNotification`} for notification structure
-   * @see {@link onteardown `onteardown`} for the cleanup handler
+   * @see {@link McpUiRequestTeardownNotification `McpUiRequestTeardownNotification`} for notification structure
+   * @see {@link onteardown `onteardown`} for the graceful termination handler
    */
-  requestClose(params: McpUiRequestCloseNotification["params"] = {}) {
-    return this.notification(<McpUiRequestCloseNotification>{
-      method: "ui/notifications/request-close",
+  requestTeardown(params: McpUiRequestTeardownNotification["params"] = {}) {
+    return this.notification(<McpUiRequestTeardownNotification>{
+      method: "ui/notifications/request-teardown",
       params,
     });
   }

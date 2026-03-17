@@ -1285,8 +1285,10 @@ Host MUST send this notification if the tool execution was cancelled, for any re
 }
 ```
 
-Host MUST send this notification before tearing down the UI resource, for any reason, including user action, resource re-allocation, etc. The Host MAY specify the reason.
+Host MUST send this notification before tearing down the UI resource, for any reason, including user action, view-initiated teardown, resource re-allocation, etc. The Host MAY specify the reason.
 Host SHOULD wait for a response before tearing down the resource (to prevent data loss).
+
+#### Notifications (View → Host)
 
 `ui/notifications/size-changed` - View's size changed
 
@@ -1303,30 +1305,25 @@ Host SHOULD wait for a response before tearing down the resource (to prevent dat
 
 The View SHOULD send this notification when rendered content body size changes (e.g. using ResizeObserver API to report up to date size).
 
-#### Notifications (View → Host)
-
-`ui/notifications/request-close` - View requests host to close it
+`ui/notifications/request-teardown` - View requests host to tear it down
 
 ```typescript
 {
   jsonrpc: "2.0",
-  method: "ui/notifications/request-close",
+  method: "ui/notifications/request-teardown",
   params: {}
 }
 ```
 
-The View MAY send this notification to request that the host close it. This enables View-initiated close flows (e.g., user clicks a "Done" button in the View).
+The View MAY send this notification to request that the host tear it down. This enables View-initiated teardown flows (e.g., user clicks a "Done" button in the View).
 
 **Host behavior:**
-- Host decides whether to proceed with the close
-- If approved, Host MUST send `ui/resource-teardown` to allow the View to perform cleanup
-- Host MUST wait for the View's teardown response before unmounting the iframe
-- Host MAY deny or defer the close request (e.g., if there are unsaved changes elsewhere)
+- Host decides whether to proceed with the teardown
+- If the Host accepts the request, it MUST follow the graceful termination process by sending `ui/resource-teardown` to the View. The Host SHOULD wait for a response before tearing down the resource (to prevent data loss).
 
 **View behavior:**
-- View SHOULD NOT perform cleanup before sending this notification
-- View SHOULD handle cleanup in its `ui/resource-teardown` handler
-- This ensures the View has a single cleanup procedure regardless of whether the close was initiated by the View or the Host
+- View MAY persist unsaved state before sending this notification.  processes MUST be completed before responding to `ui/resource-teardown` Host request.
+- View SHOULD NOT teardown its UI and assume it's going to be removed when sending this notification. Final teardown decision and timing remains Host responsibility.
 
 `ui/notifications/host-context-changed` - Host context has changed
 
@@ -1480,16 +1477,16 @@ sequenceDiagram
   end
 ```
 
-#### 4. Cleanup
+#### 4. Teardown
 
-Cleanup can be initiated by either the Host or the View. In both cases, the Host sends `ui/resource-teardown` to allow the View to perform cleanup before unmounting.
+The Host can tear down Views. Views may request teardown by sending `ui/notifications/request-teardown` to the Host. In any case, the Host MUST send `ui/resource-teardown` to allow the View to terminate gracefully.
 
 ```mermaid
 sequenceDiagram
   participant H as Host
   participant UI as View (iframe)
-  opt View-initiated close
-    UI ->> H: ui/notifications/request-close
+  opt View-initiated teardown
+    UI ->> H: ui/notifications/request-teardown
   end
   H ->> UI: ui/resource-teardown
   UI --> UI: Graceful termination
@@ -1497,7 +1494,7 @@ sequenceDiagram
   H -x H: Tear down iframe and listeners
 ```
 
-Note: Cleanup may be triggered at any point in the lifecycle following View initialization. If the View sends `ui/notifications/request-close`, the Host MAY deny or defer the request.
+Note: Teardown may be triggered at any point in the lifecycle following View initialization.
 
 #### Key Differences from Pre-SEP MCP-UI:
 
