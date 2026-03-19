@@ -1318,12 +1318,11 @@ The View SHOULD send this notification when rendered content body size changes (
 The View MAY send this notification to request that the host tear it down. This enables View-initiated teardown flows (e.g., user clicks a "Done" button in the View).
 
 **Host behavior:**
-- Host decides whether to proceed with the teardown
+- Host MAY defer or ignore the teardown request.
 - If the Host accepts the request, it MUST follow the graceful termination process by sending `ui/resource-teardown` to the View. The Host SHOULD wait for a response before tearing down the resource (to prevent data loss).
 
 **View behavior:**
-- View MAY persist unsaved state before sending this notification.  processes MUST be completed before responding to `ui/resource-teardown` Host request.
-- View SHOULD NOT teardown its UI and assume it's going to be removed when sending this notification. Final teardown decision and timing remains Host responsibility.
+- View MAY persist unsaved state before sending this notification. These processes MUST be completed before responding to `ui/resource-teardown` Host request.
 
 `ui/notifications/host-context-changed` - Host context has changed
 
