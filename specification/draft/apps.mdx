@@ -1321,9 +1321,6 @@ The View MAY send this notification to request that the host tear it down. This 
 - Host MAY defer or ignore the teardown request.
 - If the Host accepts the request, it MUST follow the graceful termination process by sending `ui/resource-teardown` to the View. The Host SHOULD wait for a response before tearing down the resource (to prevent data loss).
 
-**View behavior:**
-- View MAY persist unsaved state before sending this notification. These processes MUST be completed before responding to `ui/resource-teardown` Host request.
-
 `ui/notifications/host-context-changed` - Host context has changed
 
 ```typescript
