@@ -457,3 +457,53 @@ html, body {
   outline: 2px solid var(--color-info);
   outline-offset: 1px;
 }
+
+/* window.openai action buttons */
+.openai-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.openai-btn {
+  flex: 1;
+  padding: 8px 10px;
+  border: none;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: opacity 0.15s ease, transform 0.1s ease;
+  white-space: nowrap;
+}
+
+.openai-btn:hover {
+  opacity: 0.85;
+}
+
+.openai-btn:active {
+  transform: scale(0.97);
+}
+
+.openai-btn--save {
+  background: rgba(16, 185, 129, 0.15);
+  color: var(--color-success);
+  border: 1px solid rgba(16, 185, 129, 0.3);
+}
+
+.openai-btn--message {
+  background: rgba(59, 130, 246, 0.15);
+  color: var(--color-info);
+  border: 1px solid rgba(59, 130, 246, 0.3);
+}
+
+.openai-btn--modal {
+  background: rgba(139, 92, 246, 0.15);
+  color: #8b5cf6;
+  border: 1px solid rgba(139, 92, 246, 0.3);
+}
+
+@media (prefers-color-scheme: dark) {
+  .openai-btn--modal {
+    color: #a78bfa;
+  }
+}

@@ -916,6 +916,88 @@ app.registerTool(
   },
 );
 
+// ---------------------------------------------------------------------------
+// window.openai Button Handlers
+// ---------------------------------------------------------------------------
+
+interface OpenAiWidgetState {
+  totalBudget: number;
+  allocations: Record<string, number>;
+  stage: string;
+  savedAt: string;
+}
+
+declare global {
+  interface Window {
+    openai?: {
+      widgetState: OpenAiWidgetState | null;
+      setWidgetState: (state: OpenAiWidgetState) => void;
+      sendFollowUpMessage: (options: {
+        prompt: string;
+        scrollToBottom?: boolean;
+      }) => void;
+      requestModal: (options: {
+        params: Record<string, unknown>;
+        template?: string;
+      }) => void;
+    };
+  }
+}
+
+const btnSaveState = document.getElementById(
+  "btn-save-state",
+) as HTMLButtonElement;
+const btnAskAnalysis = document.getElementById(
+  "btn-ask-analysis",
+) as HTMLButtonElement;
+const btnViewDetails = document.getElementById(
+  "btn-view-details",
+) as HTMLButtonElement;
+
+btnSaveState.addEventListener("click", () => {
+  const widgetState: OpenAiWidgetState = {
+    totalBudget: state.totalBudget,
+    allocations: Object.fromEntries(state.allocations),
+    stage: state.selectedStage,
+    savedAt: new Date().toISOString(),
+  };
+  window.openai?.setWidgetState(widgetState);
+  btnSaveState.textContent = "Saved!";
+  setTimeout(() => {
+    btnSaveState.textContent = "Save State";
+  }, 1500);
+});
+
+btnAskAnalysis.addEventListener("click", () => {
+  if (!state.config) return;
+  const allocationSummary = state.config.categories
+    .map((category) => {
+      const percent = state.allocations.get(category.id) ?? 0;
+      return `${category.name}: ${percent.toFixed(1)}%`;
+    })
+    .join(", ");
+  window.openai?.sendFollowUpMessage({
+    prompt: `Analyze my current budget allocation for a ${state.selectedStage} company: ${allocationSummary}. Total budget: $${state.totalBudget.toLocaleString()}. How does this compare to industry benchmarks and what would you recommend adjusting?`,
+    scrollToBottom: true,
+  });
+});
+
+btnViewDetails.addEventListener("click", () => {
+  if (!state.config || !state.analytics) return;
+  const benchmark = state.analytics.benchmarks.find(
+    (benchmarkItem) => benchmarkItem.stage === state.selectedStage,
+  );
+  window.openai?.requestModal({
+    params: {
+      totalBudget: state.totalBudget,
+      currency: state.config.currency,
+      stage: state.selectedStage,
+      allocations: Object.fromEntries(state.allocations),
+      benchmarks: benchmark?.categoryBenchmarks ?? {},
+    },
+  });
+});
+
 // Handle theme changes
 window
   .matchMedia("(prefers-color-scheme: dark)")
